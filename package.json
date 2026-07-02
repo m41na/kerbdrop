@@ -1,0 +1,33 @@
+{
+  "name": "kerbdrop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:api": "pnpm --filter @kerbdrop/api dev",
+    "dev:mobile": "pnpm --filter @kerbdrop/mobile start",
+    "build:api": "pnpm --filter @kerbdrop/api build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "clean": "pnpm -r clean"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "prettier": "^3.3.3",
+    "eslint": "^8.57.0",
+    "husky": "^9.1.4",
+    "lint-staged": "^15.2.7",
+    "turbo": "^2.0.14"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "**/*.{json,md}": ["prettier --write"]
+  },
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  }
+}
