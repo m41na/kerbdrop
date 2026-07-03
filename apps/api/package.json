@@ -14,33 +14,34 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@aws-sdk/client-rekognition": "^3.614.0",
+    "@aws-sdk/client-s3": "^3.1079.0",
     "@kerbdrop/shared": "workspace:*",
     "@supabase/supabase-js": "^2.44.4",
-    "@aws-sdk/client-rekognition": "^3.614.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "expo-server-sdk": "^3.10.0",
     "express": "^4.19.2",
     "express-rate-limit": "^7.3.1",
-    "cors": "^2.8.5",
     "helmet": "^7.1.0",
-    "morgan": "^1.10.0",
-    "stripe": "^16.2.0",
-    "sharp": "^0.33.4",
-    "zod": "^3.23.8",
-    "dotenv": "^16.4.5",
     "meilisearch": "^0.41.0",
+    "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
-    "expo-server-sdk": "^3.10.0",
-    "winston": "^3.13.0"
+    "sharp": "^0.33.4",
+    "stripe": "^16.2.0",
+    "winston": "^3.13.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
     "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.14.10",
     "@types/node-cron": "^3.0.11",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
     "tsx": "^4.16.2",
     "typescript": "^5.4.5",
-    "vitest": "^2.0.4",
-    "supertest": "^7.0.0",
-    "@types/supertest": "^6.0.2"
+    "vitest": "^2.0.4"
   }
 }

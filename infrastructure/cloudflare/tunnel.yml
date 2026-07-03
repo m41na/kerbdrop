@@ -1,0 +1,7 @@
+tunnel: kerbdrop-dev
+credentials-file: ~/.cloudflared/2b5e9ec2-a649-4d73-89f5-0b887181dc32.json
+
+ingress:
+  - hostname: api.kerbdrop.com
+    service: http://localhost:3001
+  - service: http_status:404
