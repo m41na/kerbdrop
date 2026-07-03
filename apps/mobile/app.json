@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "KerbDrop",
+    "slug": "kerbdrop",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F7F5F0"
+    },
+    "scheme": "kerbdrop",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.kerbdrop.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "KerbDrop uses your location to show listings near you.",
+        "NSCameraUsageDescription": "KerbDrop uses your camera to photograph items for sale.",
+        "NSPhotoLibraryUsageDescription": "KerbDrop accesses your photos to add them to your listings."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F7F5F0"
+      },
+      "package": "com.kerbdrop.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-location",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#E85D26"
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

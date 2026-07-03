@@ -1,0 +1,49 @@
+version: '3.8'
+
+# KerbDrop — Local Development Services
+#
+# Spins up the external services needed to run the API locally.
+# The API itself (apps/api) runs via `pnpm dev:api`, not in Docker.
+#
+# Usage:
+#   Start all services:     docker compose up -d
+#   Stop all services:      docker compose down
+#   Stop + wipe volumes:    docker compose down -v
+#   View logs:              docker compose logs -f
+#   View specific service:  docker compose logs -f meilisearch
+
+services:
+
+  # ── Meilisearch ───────────────────────────────────────────────────────────
+  # Full-text + geo search for listings.
+  # Dashboard available at http://localhost:7700 (use MEILI_MASTER_KEY to log in)
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: kerbdrop-meilisearch
+    restart: unless-stopped
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-kd-meili-dev-key}
+      MEILI_ENV: development
+    volumes:
+      - meilisearch_data:/meili_data
+
+  # ── Redis ─────────────────────────────────────────────────────────────────
+  # Reserved for Phase 2+ (rate limiting at scale, job queues if BullMQ is added).
+  # Not required for Phase 0 or Phase 1 — included here so it's ready when needed.
+  redis:
+    image: redis:7-alpine
+    container_name: kerbdrop-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  meilisearch_data:
+    driver: local
+  redis_data:
+    driver: local
