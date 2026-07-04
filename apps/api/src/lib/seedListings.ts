@@ -14,8 +14,8 @@ const meili = new MeiliSearch({
   apiKey: process.env.MEILISEARCH_API_KEY,
 })
 
-// Change these to coordinates near your actual location for testing
-const BASE_LAT = 37.7749   // San Francisco — change to your city
+// ── Update these coordinates to your location for realistic distance testing ──
+const BASE_LAT = 37.7749
 const BASE_LNG = -122.4194
 
 const SEED_USER = {
@@ -99,7 +99,6 @@ async function seed() {
   }
   console.log('✅ Seed user created:', SEED_USER.handle)
 
-  // Insert listings
   const now = new Date()
   const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
 
@@ -112,7 +111,7 @@ async function seed() {
     ai_generated: false,
     view_count: 0,
     expires_at: expiresAt.toISOString(),
-    created_at: new Date(now.getTime() - i * 60 * 1000).toISOString(), // stagger by 1 min
+    created_at: new Date(now.getTime() - i * 60 * 1000).toISOString(),
   }))
 
   const { error: listingError } = await supabase
@@ -123,9 +122,9 @@ async function seed() {
     console.error('Failed to create listings:', listingError)
     process.exit(1)
   }
-  console.log(`✅ ${listings.length} listings created`)
+  console.log(`✅ ${listings.length} listings created in Supabase`)
 
-  // Sync to Meilisearch
+  // Sync to Meilisearch — wait for task to complete
   const meiliDocs = listings.map((l) => ({
     ...l,
     seller_handle: SEED_USER.handle,
@@ -138,16 +137,12 @@ async function seed() {
     },
   }))
 
-  // Sync to Meilisearch — wait for task to complete
   const task = await meili.index('listings').addDocuments(meiliDocs, { primaryKey: 'id' })
   console.log('Meilisearch task enqueued:', task.taskUid)
-
-  // Wait for indexing to finish
   await meili.waitForTask(task.taskUid)
   console.log('✅ Listings synced to Meilisearch')
-  
   console.log('\nDone. Base coordinates:', BASE_LAT, BASE_LNG)
-  console.log('Update BASE_LAT and BASE_LNG to coordinates near your location for realistic distance testing.')
+  console.log('Update BASE_LAT and BASE_LNG to coordinates near your location.')
 }
 
 seed().catch((err) => {

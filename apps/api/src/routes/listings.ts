@@ -9,20 +9,16 @@ export const listingsRouter = Router()
 
 // ── Public routes ─────────────────────────────────────────────────────────
 
-// Browse feed — public, geo-sorted, no auth needed
+// Browse feed — geo-sorted, distance + recency only, no auth needed
 listingsRouter.get('/', optionalAuth, validate(SearchQuerySchema, 'query'), async (req, res) => {
   const { lat, lng, radiusMiles, category, condition, minPriceCents, maxPriceCents, page, limit } = req.query as any
 
   try {
-    // Build Meilisearch filters
     const filters: string[] = ["status = 'active'"]
-
     if (category) filters.push(`category = '${category}'`)
     if (condition) filters.push(`condition = '${condition}'`)
     if (minPriceCents) filters.push(`price_cents >= ${minPriceCents}`)
     if (maxPriceCents) filters.push(`price_cents <= ${maxPriceCents}`)
-
-    // Geo radius filter (meters)
     filters.push(`_geoRadius(${lat}, ${lng}, ${Math.round(radiusMiles * 1609)})`)
 
     const results = await listingsIndex.search('', {
@@ -41,7 +37,6 @@ listingsRouter.get('/', optionalAuth, validate(SearchQuerySchema, 'query'), asyn
       ],
     })
 
-    // Annotate with distance in miles
     const listings = results.hits.map((hit: any) => ({
       ...hit,
       distance_miles: hit._geoDistance
@@ -68,7 +63,7 @@ listingsRouter.get('/', optionalAuth, validate(SearchQuerySchema, 'query'), asyn
   }
 })
 
-// Listing detail — public
+// My listings — authenticated
 listingsRouter.get('/mine', requireAuth, async (req, res) => {
   const { data, error } = await supabase
     .from('listings')
@@ -80,6 +75,7 @@ listingsRouter.get('/mine', requireAuth, async (req, res) => {
   return res.json({ success: true, data })
 })
 
+// Listing detail — public
 listingsRouter.get('/:id', optionalAuth, async (req, res) => {
   const { data, error } = await supabase
     .from('listings')
@@ -110,23 +106,29 @@ listingsRouter.get('/:id', optionalAuth, async (req, res) => {
 
 // ── Authenticated routes ──────────────────────────────────────────────────
 
+// Create listing
+// Gate: phone_verified only. payment_verified is NOT required.
 listingsRouter.post('/', requireAuth, rateLimits.listingCreate, validate(CreateListingSchema), async (req, res) => {
   // TODO: implement in Phase 3
   res.status(201).json({ success: true, data: null })
 })
 
 listingsRouter.patch('/:id', requireAuth, validate(UpdateListingSchema), async (req, res) => {
+  // TODO: implement in Phase 3
   res.json({ success: true, data: null })
 })
 
 listingsRouter.post('/:id/sold', requireAuth, async (req, res) => {
+  // TODO: implement in Phase 3
   res.json({ success: true })
 })
 
 listingsRouter.post('/:id/relist', requireAuth, async (req, res) => {
+  // TODO: implement in Phase 3
   res.status(201).json({ success: true, data: null })
 })
 
 listingsRouter.delete('/:id', requireAuth, async (req, res) => {
+  // TODO: implement in Phase 3
   res.json({ success: true })
 })

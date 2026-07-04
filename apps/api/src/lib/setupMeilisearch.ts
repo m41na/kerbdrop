@@ -13,7 +13,7 @@ async function setup() {
 
   const index = client.index('listings')
 
-  await index.updateSettings({
+  const task = await index.updateSettings({
     searchableAttributes: [
       'title',
       'description',
@@ -65,9 +65,9 @@ async function setup() {
     ],
   })
 
+  await client.waitForTask(task.taskUid)
   console.log('✅ Meilisearch listings index configured')
 
-  // Verify
   const settings = await index.getSettings()
   console.log('Filterable attributes:', settings.filterableAttributes)
   console.log('Sortable attributes:', settings.sortableAttributes)

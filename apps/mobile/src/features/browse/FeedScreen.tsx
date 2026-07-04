@@ -77,14 +77,10 @@ export function FeedScreen() {
         limit: '40',
         page: '0',
       })
-
-      if (selectedCategory !== 'all') {
-        params.append('category', selectedCategory)
-      }
+      if (selectedCategory !== 'all') params.append('category', selectedCategory)
 
       const res = await fetch(`${API_URL}/api/v1/listings?${params}`)
       const json = await res.json()
-
       if (json.success) setListings(json.data)
     } catch (err) {
       console.error('Feed fetch error:', err)
@@ -101,14 +97,9 @@ export function FeedScreen() {
         onPress={() => navigation.navigate('ListingDetail', { listingId: item.id })}
         activeOpacity={0.85}
       >
-        {/* Photo */}
         <View style={styles.photoContainer}>
           {item.thumb_url ? (
-            <Image
-              source={{ uri: item.thumb_url }}
-              style={styles.photo}
-              contentFit="cover"
-            />
+            <Image source={{ uri: item.thumb_url }} style={styles.photo} contentFit="cover" />
           ) : (
             <View style={styles.photoPlaceholder}>
               <Text style={styles.photoPlaceholderText}>No photo</Text>
@@ -120,8 +111,6 @@ export function FeedScreen() {
             </View>
           )}
         </View>
-
-        {/* Info */}
         <View style={styles.cardInfo}>
           <Text style={styles.price}>{formatCentsShort(item.price_cents)}</Text>
           <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
@@ -136,29 +125,23 @@ export function FeedScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Offline banner */}
       {!isConnected && (
         <View style={styles.offlineBanner}>
           <Text style={styles.offlineBannerText}>No internet connection</Text>
         </View>
       )}
 
-      {/* Header */}
       <View style={styles.header}>
         <View style={styles.locationRow}>
           <View style={styles.locationPulse} />
-          <Text style={styles.locationLabel}>
-            {location?.label ?? 'Your area'}
-          </Text>
+          <Text style={styles.locationLabel}>{location?.label ?? 'Your area'}</Text>
         </View>
       </View>
 
-      {/* Sort transparency label */}
       <Text style={styles.sortLabel}>
         Sorted by: Nearest first, newest first. Always.
       </Text>
 
-      {/* Category filter */}
       <FlatList
         horizontal
         data={CATEGORIES}
@@ -167,25 +150,16 @@ export function FeedScreen() {
         contentContainerStyle={styles.categoryList}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={[
-              styles.categoryPill,
-              selectedCategory === item.key && styles.categoryPillActive,
-            ]}
+            style={[styles.categoryPill, selectedCategory === item.key && styles.categoryPillActive]}
             onPress={() => setSelectedCategory(item.key)}
           >
-            <Text
-              style={[
-                styles.categoryPillText,
-                selectedCategory === item.key && styles.categoryPillTextActive,
-              ]}
-            >
+            <Text style={[styles.categoryPillText, selectedCategory === item.key && styles.categoryPillTextActive]}>
               {item.label}
             </Text>
           </TouchableOpacity>
         )}
       />
 
-      {/* Feed */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator color={colors.accent} size="large" />
@@ -208,9 +182,7 @@ export function FeedScreen() {
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>Nothing listed nearby yet.</Text>
-              <Text style={styles.emptyBody}>
-                Be the first — tap Sell to post something.
-              </Text>
+              <Text style={styles.emptyBody}>Be the first — tap Sell to post something.</Text>
             </View>
           }
         />
@@ -220,165 +192,34 @@ export function FeedScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.surface,
-  },
-  offlineBanner: {
-    backgroundColor: colors.warning,
-    paddingVertical: spacing[2],
-    alignItems: 'center',
-  },
-  offlineBannerText: {
-    fontSize: typography.sm,
-    color: colors.white,
-    fontWeight: typography.medium,
-  },
-  header: {
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing[2],
-  },
-  locationPulse: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.accent,
-  },
-  locationLabel: {
-    fontSize: typography.base,
-    fontWeight: typography.medium,
-    color: colors.ink,
-  },
-  sortLabel: {
-    fontSize: typography.xs,
-    color: colors.inkFaint,
-    paddingHorizontal: spacing[4],
-    paddingTop: spacing[2],
-    paddingBottom: spacing[1],
-  },
-  categoryList: {
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[2],
-    gap: spacing[2],
-  },
-  categoryPill: {
-    paddingHorizontal: spacing[3],
-    paddingVertical: spacing[2],
-    borderRadius: radius.full,
-    backgroundColor: colors.surfaceAlt,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginRight: spacing[2],
-  },
-  categoryPillActive: {
-    backgroundColor: colors.accent,
-    borderColor: colors.accent,
-  },
-  categoryPillText: {
-    fontSize: typography.sm,
-    color: colors.inkMuted,
-    fontWeight: typography.medium,
-  },
-  categoryPillTextActive: {
-    color: colors.white,
-  },
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  grid: {
-    padding: spacing[3],
-  },
-  row: {
-    gap: spacing[3],
-    marginBottom: spacing[3],
-  },
-  card: {
-    flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: radius.base,
-    overflow: 'hidden',
-    ...shadows.sm,
-  },
-  photoContainer: {
-    position: 'relative',
-    aspectRatio: 4 / 3,
-    backgroundColor: colors.surfaceAlt,
-  },
-  photo: {
-    width: '100%',
-    height: '100%',
-  },
-  photoPlaceholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  photoPlaceholderText: {
-    fontSize: typography.xs,
-    color: colors.inkFaint,
-  },
-  paymentBadge: {
-    position: 'absolute',
-    bottom: spacing[1],
-    right: spacing[1],
-    backgroundColor: colors.success,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paymentBadgeText: {
-    fontSize: 10,
-    color: colors.white,
-    fontWeight: typography.bold,
-  },
-  cardInfo: {
-    padding: spacing[2],
-    gap: 2,
-  },
-  price: {
-    fontSize: typography.lg,
-    fontWeight: typography.bold,
-    color: colors.ink,
-  },
-  title: {
-    fontSize: typography.sm,
-    fontWeight: typography.medium,
-    color: colors.ink,
-    lineHeight: typography.sm * 1.4,
-  },
-  meta: {
-    fontSize: typography.xs,
-    color: colors.inkFaint,
-    marginTop: 2,
-  },
-  empty: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 80,
-    paddingHorizontal: spacing[8],
-    gap: spacing[2],
-  },
-  emptyTitle: {
-    fontSize: typography.xl,
-    fontWeight: typography.semibold,
-    color: colors.ink,
-    textAlign: 'center',
-  },
-  emptyBody: {
-    fontSize: typography.base,
-    color: colors.inkMuted,
-    textAlign: 'center',
-    lineHeight: typography.base * 1.5,
-  },
+  container: { flex: 1, backgroundColor: colors.surface },
+  offlineBanner: { backgroundColor: colors.warning, paddingVertical: spacing[2], alignItems: 'center' },
+  offlineBannerText: { fontSize: typography.sm, color: colors.white, fontWeight: typography.medium },
+  header: { paddingHorizontal: spacing[4], paddingVertical: spacing[3], borderBottomWidth: 1, borderBottomColor: colors.border },
+  locationRow: { flexDirection: 'row', alignItems: 'center', gap: spacing[2] },
+  locationPulse: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.accent },
+  locationLabel: { fontSize: typography.base, fontWeight: typography.medium, color: colors.ink },
+  sortLabel: { fontSize: typography.xs, color: colors.inkFaint, paddingHorizontal: spacing[4], paddingTop: spacing[2], paddingBottom: spacing[1] },
+  categoryList: { paddingHorizontal: spacing[4], paddingVertical: spacing[2] },
+  categoryPill: { paddingHorizontal: spacing[3], paddingVertical: spacing[2], borderRadius: radius.full, backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border, marginRight: spacing[2] },
+  categoryPillActive: { backgroundColor: colors.accent, borderColor: colors.accent },
+  categoryPillText: { fontSize: typography.sm, color: colors.inkMuted, fontWeight: typography.medium },
+  categoryPillTextActive: { color: colors.white },
+  loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  grid: { padding: spacing[3] },
+  row: { gap: spacing[3], marginBottom: spacing[3] },
+  card: { flex: 1, backgroundColor: colors.white, borderRadius: radius.base, overflow: 'hidden', ...shadows.sm },
+  photoContainer: { position: 'relative', aspectRatio: 4 / 3, backgroundColor: colors.surfaceAlt },
+  photo: { width: '100%', height: '100%' },
+  photoPlaceholder: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  photoPlaceholderText: { fontSize: typography.xs, color: colors.inkFaint },
+  paymentBadge: { position: 'absolute', bottom: spacing[1], right: spacing[1], backgroundColor: colors.success, width: 18, height: 18, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
+  paymentBadgeText: { fontSize: 10, color: colors.white, fontWeight: typography.bold },
+  cardInfo: { padding: spacing[2], gap: 2 },
+  price: { fontSize: typography.lg, fontWeight: typography.bold, color: colors.ink },
+  title: { fontSize: typography.sm, fontWeight: typography.medium, color: colors.ink, lineHeight: typography.sm * 1.4 },
+  meta: { fontSize: typography.xs, color: colors.inkFaint, marginTop: 2 },
+  empty: { alignItems: 'center', justifyContent: 'center', paddingTop: 80, paddingHorizontal: spacing[8], gap: spacing[2] },
+  emptyTitle: { fontSize: typography.xl, fontWeight: typography.semibold, color: colors.ink, textAlign: 'center' },
+  emptyBody: { fontSize: typography.base, color: colors.inkMuted, textAlign: 'center', lineHeight: typography.base * 1.5 },
 })
